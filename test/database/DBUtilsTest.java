@@ -1,5 +1,6 @@
 package database;
 
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class DBUtilsTest {
     public void testFetchResults() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = dbUtils.fetchResults("select * from white_label");
         while(resultSet.next()) {
-            String user = resultSet.getString("user");
+            String user = resultSet.getString("user_id");
             String logo = resultSet.getString("logo");
             System.out.println(user);
             System.out.println(logo);

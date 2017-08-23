@@ -1,6 +1,5 @@
-package json;
+package logo;
 import dto.LogoModel;
-import json.JsonGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,23 +10,23 @@ import java.util.List;
 /**
  * Created by ajopaul on 21/8/17.
  */
-public class JsonGeneratorTest {
+public class LogoServiceTest {
 
-    JsonGenerator jsonGenerator;
+    LogoService logoService;
     @Before
     public void setup() throws SQLException, ClassNotFoundException {
-        jsonGenerator  = new JsonGenerator();
+        logoService = new LogoService();
     }
 
     @Test
     public void testLogosRows() throws SQLException, ClassNotFoundException {
-        List<LogoModel> logos = jsonGenerator.getLogoRows();
+        List<LogoModel> logos = logoService.getLogoRows();
         Assert.assertTrue(logos.size() > 0);
     }
 
     @Test
     public void testJsonGen() throws SQLException, ClassNotFoundException {
-        String json = jsonGenerator.jsonGenerator();
+        String json = logoService.jsonGenerator();
         System.out.println(json);
         Assert.assertTrue(json.length() > 0);
     }

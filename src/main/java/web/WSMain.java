@@ -1,7 +1,7 @@
 package web;
 
 import dto.LogoModel;
-import json.JsonGenerator;
+import logo.LogoService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,8 +28,8 @@ public class WSMain {
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getBrokerLogos() throws SQLException, ClassNotFoundException {
-        JsonGenerator jsonGenerator = new JsonGenerator();
-        List<LogoModel> rows = jsonGenerator.getLogoRows();
+        LogoService logoService = new LogoService();
+        List<LogoModel> rows = logoService.getLogoRows();
         return Response.status(200).entity(rows).build();
     }
 }

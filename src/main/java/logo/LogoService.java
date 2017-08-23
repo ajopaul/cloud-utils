@@ -1,10 +1,9 @@
-package json;
+package logo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import database.DBUtils;
 import dto.LogoModel;
-import sun.rmi.runtime.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,11 +13,11 @@ import java.util.List;
 /**
  * Created by ajopaul on 21/8/17.
  */
-public class JsonGenerator {
+public class LogoService {
     DBUtils dbUtils;
 
     String sqlQuery;
-    public JsonGenerator() throws SQLException, ClassNotFoundException {
+    public LogoService() throws SQLException, ClassNotFoundException {
         dbUtils = DBUtils.getInstance();
         dbUtils.init();
         sqlQuery = "select concat(us.FIRST_NAME, ' ', us.SURNAME) as user, wl.logo, wl.logo_active, wl.profile_image,\n" +

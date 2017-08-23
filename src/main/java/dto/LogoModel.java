@@ -20,6 +20,8 @@ public class LogoModel {
     public String modifiedByUser;
     public Date modifiedByDate;
 
-
+    public String getLogoUrl() {
+        return "hello";
+    }
 
 }

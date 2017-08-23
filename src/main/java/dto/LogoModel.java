@@ -16,7 +16,7 @@ public class LogoModel {
     public boolean isLogoActive;
 
     public String profileImageKey;
-    public String profileImageLogo;
+    public String profileImageUrl;
     public boolean isProfileActive;
 
     public String modifiedByUser;
@@ -26,6 +26,12 @@ public class LogoModel {
         if(null != logoKey && !logoKey.isEmpty())
             logoUrl = AWSS3Util.getUrl(logoKey);
         return logoUrl;
+    }
+
+    public String getProfileImageUrl(){
+        if(null != profileImageKey && !profileImageKey.isEmpty())
+            profileImageUrl = AWSS3Util.getUrl(profileImageKey);
+        return profileImageUrl;
     }
 
 }

@@ -19,7 +19,9 @@ import dto.LogoModel;
 import org.glassfish.jersey.client.ClientConfig;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import util.SystemProperties;
 
 /**
  * Created by ajopaul on 22/8/17.
@@ -31,7 +33,7 @@ public class WSMainTest extends AbstractTest{
 
     @Before
     public void setup(){
-        WEB_SERVER_URL = "http://localhost:8088/cloud";
+        WEB_SERVER_URL = SystemProperties.getPropValue("web_server_url");
         ClientConfig config = new ClientConfig();
         Client client = ClientBuilder.newClient(config);
         target = client.target(getBaseURI());
@@ -81,6 +83,7 @@ public class WSMainTest extends AbstractTest{
         Assert.assertNotNull(response);
     }
 
+
     @Test
     public void testLogoRows() throws Exception {
         String json = target.path("rest").
@@ -92,12 +95,24 @@ public class WSMainTest extends AbstractTest{
         ObjectMapper mapper = new ObjectMapper();
 
         List<LogoModel> rows = mapper.readValue(json, new TypeReference<List<LogoModel>>(){});
-        rows.forEach(l -> {
+        System.out.println("Testing logos");
+        rows.stream().filter(l -> null != l.getLogoUrl()).forEach(l -> {
             try {
                 testUrlReachable(l.getLogoUrl());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+        });
+
+        System.out.println("Testing profile Images");
+        rows.stream().filter(l -> null != l.getProfileImageUrl()).forEach(l -> {
+            try {
+                testUrlReachable(l.getProfileImageUrl());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         });
     }
 

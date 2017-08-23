@@ -19,43 +19,62 @@ import org.junit.Test;
  */
 public class WSMainTest {
 
+    private static String WEB_SERVER_URL;
     private WebTarget target;
 
     @Before
     public void setup(){
+        WEB_SERVER_URL = "http://localhost:8088/cloud";
         ClientConfig config = new ClientConfig();
-
         Client client = ClientBuilder.newClient(config);
-
         target = client.target(getBaseURI());
+        org.junit.Assume.assumeTrue(checkWebServerIsUp());
+    }
+
+    private boolean checkWebServerIsUp(){
+        boolean isServerUp = false;
+        try{
+            Response response =  target.request().get(Response.class);
+            System.out.println("Check Web Server status "+response);
+            if(null != response && response.getStatus() == 200)
+                isServerUp = true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return isServerUp;
     }
 
     @Test
     public void testHello(){
         String response = target.path("rest").
-                path("logos").
-                path("ajopaul").
-                request().
-                accept(MediaType.TEXT_PLAIN).
-                get(Response.class)
-                .toString();
-        System.out.println(response);
-        String plainAnswer = target.path("rest").path("logos").path("ajopaul").request().accept(MediaType.TEXT_PLAIN).get(String.class);
+                            path("logos").
+                            path("ajopaul").
+                            request().
+                            accept(MediaType.TEXT_PLAIN).
+                            get(Response.class)
+                            .toString();
+        String plainAnswer = target.path("rest").
+                              path("logos").
+                              path("ajopaul").
+                              request().
+                              accept(MediaType.TEXT_PLAIN).
+                              get(String.class);
         Assert.assertEquals("ajopaul", plainAnswer);
-        //String plainAnswer =
-          //      target.path("rest").path("hello").request().accept(MediaType.TEXT_PLAIN).get(String.class);
-//        String xmlAnswer =
-//                target.path("rest").path("hello").request().accept(MediaType.TEXT_XML).get(String.class);
-//        String htmlAnswer=
-//                target.path("rest").path("hello").request().accept(MediaType.TEXT_HTML).get(String.class);
-//
-//        System.out.println(response);
-//        System.out.println(plainAnswer);
-//        System.out.println(xmlAnswer);
-//        System.out.println(htmlAnswer);
+    }
+
+    @Test
+    public void testJson() {
+        String response = target.path("rest").
+                            path("logos").
+                            path("all").
+                            request().
+                            accept(MediaType.APPLICATION_JSON).
+                            get(String.class);
+        System.out.println("Response: \n"+response);
+        Assert.assertNotNull(response);
     }
 
     private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost:8080/cloud").build();
+        return UriBuilder.fromUri(WEB_SERVER_URL).build();
     }
 }

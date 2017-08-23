@@ -18,7 +18,7 @@ public class JsonGenerator {
     DBUtils dbUtils;
 
     String sqlQuery;
-    public void init() throws SQLException, ClassNotFoundException {
+    public JsonGenerator() throws SQLException, ClassNotFoundException {
         dbUtils = DBUtils.getInstance();
         dbUtils.init();
         sqlQuery = "select concat(us.FIRST_NAME, ' ', us.SURNAME) as user, wl.logo, wl.logo_active, wl.profile_image,\n" +

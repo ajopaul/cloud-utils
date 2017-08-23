@@ -17,7 +17,6 @@ public class JsonGeneratorTest {
     @Before
     public void setup() throws SQLException, ClassNotFoundException {
         jsonGenerator  = new JsonGenerator();
-        jsonGenerator.init();
     }
 
     @Test

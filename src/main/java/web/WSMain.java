@@ -1,5 +1,6 @@
 package web;
 
+import dto.LogoModel;
 import json.JsonGenerator;
 
 import javax.ws.rs.GET;
@@ -9,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by ajopaul on 22/8/17.
@@ -17,20 +19,17 @@ import java.sql.SQLException;
 public class WSMain {
     @GET
 	@Path("/{param}")
-    //@Produces(MediaType.TEXT_PLAIN)
 	public Response getMsg(@PathParam("param") String msg) {
-
-		String output =  "Hello" + msg;
-       // return output;
+		String output =  msg;
 		return Response.status(200).entity(output).build();
-
 	}
 
     @GET
     @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
 	public Response getBrokerLogos() throws SQLException, ClassNotFoundException {
         JsonGenerator jsonGenerator = new JsonGenerator();
-        String json = jsonGenerator.jsonGenerator();
-        return null;
+        List<LogoModel> rows = jsonGenerator.getLogoRows();
+        return Response.status(200).entity(rows).build();
     }
 }

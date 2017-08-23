@@ -2,4 +2,4 @@ access_key_id =
 secret_access_key =
 bucket_name =
 web_server_url =
-logo_sql = select concat(us.FIRST_NAME, ' ', us.SURNAME) as user, wl.logo, wl.logo_active, wl.profile_image, wl.profile_image_active, concat(us2.FIRST_NAME,' ',us2.SURNAME) as modified_user, wl.modified_date from white_label wl inner join user_security us on us.USER_ID = wl.user_id inner join user_security us2 on us2.user_id = wl.modified_by
+logo_sql =

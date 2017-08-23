@@ -3,6 +3,8 @@ package database;
 /**
  * Created by ajopaul on 21/8/17.
  */
+import util.SystemProperties;
+
 import java.sql.*;
 
 public class DBUtils {
@@ -21,12 +23,8 @@ public class DBUtils {
         return new DBUtils();
     }
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
-
     public void init() throws SQLException, ClassNotFoundException {
-        dbUrl = "jdbc:mysql://localhost:3306/fleats?characterEncoding=UTF-8&useOldAliasMetadataBehavior=true&user=fleats&password=fleats";
+        dbUrl = SystemProperties.getPropValue("db_connection_url");
         createConnection();
     }
 

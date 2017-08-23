@@ -13,15 +13,18 @@ import util.SystemProperties;
  * Created by ajopaul on 23/8/17.
  */
 public class AWSS3Util {
-	private static final String BUCKET_NAME = "";
-	private static AmazonS3 s3Client;
 
-	 private static String access_key_id = SystemProperties.getPropValue("access_key_id");
-	 private static String secret_access_key = SystemProperties.getPropValue("secret_access_key");
+	 private static AmazonS3 s3Client;
 
+	 private static final String ACCESS_KEY_ID = SystemProperties.getPropValue("access_key_id");
+	 private static final String SECRET_ACCESS_KEY = SystemProperties.getPropValue("secret_access_key");
+	 private static final String BUCKET_NAME = SystemProperties.getPropValue("bucket_name");;
+     static {
+         s3Client = getClient();
+     }
      public static AmazonS3 getClient() throws AmazonServiceException {
 		 if (s3Client == null) {
-			 BasicAWSCredentials awsCreds = new BasicAWSCredentials(access_key_id, secret_access_key);
+			 BasicAWSCredentials awsCreds = new BasicAWSCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
 
 			 s3Client = AmazonS3ClientBuilder.standard()
 					 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
@@ -31,7 +34,7 @@ public class AWSS3Util {
 		 return s3Client;
 	 }
 
-	 private static String getUrl(String keyName) {
+	 public static String getUrl(String keyName) {
         String url = null;
         try {
                 url = ((AmazonS3Client) s3Client).getResourceUrl(BUCKET_NAME, keyName);

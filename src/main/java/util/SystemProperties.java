@@ -13,8 +13,8 @@ public class SystemProperties {
     static {
         properties = new Properties();
         try {
-            InputStream input = new FileInputStream("properties.file");
-            properties.load(input);
+            InputStream inputStream = SystemProperties.class.getClassLoader().getResourceAsStream("properties.file");
+            properties.load(inputStream);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

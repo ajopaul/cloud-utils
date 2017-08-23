@@ -1,5 +1,7 @@
 package dto;
 
+import s3.AWSS3Util;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -21,7 +23,9 @@ public class LogoModel {
     public Date modifiedByDate;
 
     public String getLogoUrl() {
-        return "hello";
+        if(null != logoKey && !logoKey.isEmpty())
+            logoUrl = AWSS3Util.getUrl(logoKey);
+        return logoUrl;
     }
 
 }

@@ -1,6 +1,8 @@
 package web;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -9,6 +11,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import common.AbstractTest;
+import dto.LogoModel;
 import org.glassfish.jersey.client.ClientConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +24,7 @@ import org.junit.Test;
 /**
  * Created by ajopaul on 22/8/17.
  */
-public class WSMainTest {
+public class WSMainTest extends AbstractTest{
 
     private static String WEB_SERVER_URL;
     private WebTarget target;
@@ -72,6 +79,26 @@ public class WSMainTest {
                             get(String.class);
         System.out.println("Response: \n"+response);
         Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testLogoRows() throws Exception {
+        String json = target.path("rest").
+                path("logos").
+                path("all").
+                request().
+                accept(MediaType.APPLICATION_JSON).
+                get(String.class);
+        ObjectMapper mapper = new ObjectMapper();
+
+        List<LogoModel> rows = mapper.readValue(json, new TypeReference<List<LogoModel>>(){});
+        rows.forEach(l -> {
+            try {
+                testUrlReachable(l.getLogoUrl());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private static URI getBaseURI() {

@@ -26,6 +26,7 @@ import util.SystemProperties;
 /**
  * Created by ajopaul on 22/8/17.
  */
+ //@Ignore
 public class WSMainTest extends AbstractTest{
 
     private static String WEB_SERVER_URL;

@@ -26,11 +26,8 @@ public class DBUtilsTest {
         ResultSet resultSet = dbUtils.fetchResults("select * from white_label");
         while(resultSet.next()) {
             String user = resultSet.getString("user_id");
-            String logo = resultSet.getString("logo");
             System.out.println(user);
-            System.out.println(logo);
             Assert.assertNotNull(user);
-            Assert.assertNotNull(logo);
         }
     }
 

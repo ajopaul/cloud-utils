@@ -3,6 +3,7 @@ package s3;
 import common.AbstractTest;
 import org.junit.Before;
 import org.junit.Test;
+import util.SystemProperties;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class AWSS3UtilTest extends AbstractTest {
 
     @Before
     public void setup(){
-        keyName = "2205/profile/fc4d00b7-45cd-4d15-a708-c127f64b7418";
+        keyName = SystemProperties.getPropValue("test_key_name");
     }
 
     @Test

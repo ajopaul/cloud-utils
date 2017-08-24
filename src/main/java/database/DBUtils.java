@@ -20,7 +20,7 @@ public class DBUtils {
     public static final String HOST = SystemProperties.getPropValue("ssh_host");
     public static final String DB_HOST = SystemProperties.getPropValue("db_host");
 
-    public static Environment ENVIRONMENT = Environment.DEV;
+    public static Environment ENVIRONMENT = Environment.PROD;
 
     enum Environment {DEV, UAT, PROD};
 
@@ -94,6 +94,7 @@ public class DBUtils {
                     switch (colType) {
                         case Types.INTEGER:
                         case Types.BIGINT:
+                        case Types.DECIMAL:
                             rowValues.add(resultSet.getInt(i));
                             break;
                         case Types.VARCHAR:

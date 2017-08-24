@@ -13,10 +13,14 @@ $(document).ready(function () {
             $('tbody').append(tr);
         }
     });
+     var counts = function() {
+             $.getJSON('rest/logos/counts',
+                 function (json) {
+                     $('#logo_count').append(json.logo_active_count);
+                     $('#profile_count').append(json.profile_active_count);
+                 });
+     }
 
-    $.getJSON('rest/logos/counts',
-        function (json) {
-        $('#logo_count').append(json.logo_active_count);
-        $('#profile_count').append(json.profile_active_count);
-    });
+
+     setTimeout(counts, 2000);
 });

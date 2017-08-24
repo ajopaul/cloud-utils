@@ -64,20 +64,15 @@ public class LogoService {
 
     public Map<String, Integer> getLogoCounts() throws Exception {
         Map<String, Integer> countsMap = new HashMap<>();
-        String logoSqlQuery = "select count(*) as count from white_label where logo is not null and logo_active = 'Y' and modified_by is not null and modified_by != 33393";
-        int count = getCount(logoSqlQuery);
-        countsMap.put("logo_active_count", count);
-
-        String profileSqlQuery = "select count(*) as count from white_label where logo is not null and logo_active = 'Y' and modified_by is not null and modified_by != 33393";
-        int profileCount = getCount(profileSqlQuery);
-        countsMap.put("profile_active_count", profileCount);
+        String countSql = "select sum(case when logo is not null and logo_active = 'Y' and modified_by is not null and modified_by != 33393 then 1 else 0 end) logo, sum(case when profile_image is not null and profile_image_active = 'Y' and modified_by is not null and modified_by != 33393 then 1 else 0 end) profile from white_label";
+        DBUtils.ResultSetHandler resultSetHandler = DBUtils.fetchResults(countSql);
+        List<Object> row = resultSetHandler.rowsList.get(0);
+        if(row.size() > 1) {
+            countsMap.put("logo_active_count", Integer.parseInt(String.valueOf(row.get(0))));
+            countsMap.put("profile_active_count", Integer.parseInt(String.valueOf(row.get(1))));
+        }
         return countsMap;
     }
 
 
-    private int getCount(String logoSqlQuery) throws Exception {
-        DBUtils.ResultSetHandler resultSetHandler = DBUtils.fetchResults(logoSqlQuery);
-        int count = Integer.parseInt(String.valueOf(resultSetHandler.rowsList.get(0).get(0)));
-        return count;
-    }
 }

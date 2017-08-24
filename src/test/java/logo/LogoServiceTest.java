@@ -38,9 +38,9 @@ public class LogoServiceTest {
         Map<String, Integer> counts = logoService.getLogoCounts();
         Integer logo_active_count = counts.get("logo_active_count");
         System.out.println(logo_active_count);
-        Assert.assertTrue(logo_active_count >= 0);
+        Assert.assertTrue(null != logo_active_count && logo_active_count >= 0);
         Integer profile_active_count = counts.get("profile_active_count");
         System.out.println(profile_active_count);
-        Assert.assertTrue(profile_active_count >= 0);
+        Assert.assertTrue(null != profile_active_count && profile_active_count >= 0);
     }
 }

@@ -20,7 +20,7 @@ public class DBUtils {
     public static final String HOST = SystemProperties.getPropValue("ssh_host");
     public static final String DB_HOST = SystemProperties.getPropValue("db_host");
 
-    public static Environment ENVIRONMENT = Environment.PROD;
+    public static Environment ENVIRONMENT = Environment.DEV;
 
     enum Environment {DEV, UAT, PROD};
 

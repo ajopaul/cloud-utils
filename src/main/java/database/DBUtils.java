@@ -20,10 +20,9 @@ public class DBUtils {
     public static final String HOST = SystemProperties.getPropValue("ssh_host");
     public static final String DB_HOST = SystemProperties.getPropValue("db_host");
 
-    public static Environment ENVIRONMENT = Environment.DEV;
+    public static Environment ENVIRONMENT = Environment.PROD;
 
     enum Environment {DEV, UAT, PROD};
-    private static String dbUrl;
 
 
     private DBUtils()  {
@@ -31,46 +30,49 @@ public class DBUtils {
 
 
 
-    private static void init(Connection connect ,Session session) throws SQLException, ClassNotFoundException, JSchException {
-        dbUrl = SystemProperties.getPropValue("db_connection_url");
+    private static Session createTunnelSession() throws SQLException, ClassNotFoundException, JSchException {
+        Session session = null;
         switch (ENVIRONMENT){
             case DEV:
                 break;
             case UAT:
-                tunnel(session);
+                session = tunnel();
                 break;
             case PROD:
-                tunnel(session);
+                session = tunnel();
                 break;
         }
-
-        connect = createConnection(connect);
+        return session;
     }
 
-    private static void tunnel(Session session) throws JSchException {
+    private static Session tunnel() throws JSchException {
+        Session session ;
         JSch jsch = new JSch();
         jsch.addIdentity(SSH_KEY_IDENTITY);
         session = jsch.getSession(USERNAME, HOST, 22);
-        session.setConfig( "StrictHostKeyChecking", "no" );
+        session.setConfig("StrictHostKeyChecking", "no");
         session.connect();
         session.setPortForwardingL(3356, DB_HOST, 3306);
+        System.out.println("Connected to "+ENVIRONMENT);
+        return session;
     }
 
-    private static Connection createConnection(Connection connect) throws ClassNotFoundException, SQLException {
+    private static Connection createConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-        connect = DriverManager
+        String dbUrl = SystemProperties.getPropValue("db_connection_url");
+        Connection connect = DriverManager
                 .getConnection(dbUrl);
         return connect;
     }
 
     public static ResultSetHandler fetchResults(String sql) throws SQLException, ClassNotFoundException, JSchException {
-          Connection connect = null;
+          Connection connect ;
 
           ResultSet resultSet = null;
           Statement statement = null;
-          Session session = null;
-         init(connect, session);
-        connect = createConnection(connect);
+          Session session = createTunnelSession();
+
+        connect = createConnection();
 
         ResultSetHandler resultSetHandler = new ResultSetHandler();
         try {

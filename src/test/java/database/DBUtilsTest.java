@@ -8,30 +8,20 @@ import org.junit.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by ajopaul on 21/8/17.
  */
 public class DBUtilsTest {
-    DBUtils dbUtils;
-
-    @Before
-    public void setup() throws SQLException, ClassNotFoundException {
-        dbUtils = DBUtils.getInstance();
-        dbUtils.init();
-    }
 
     @Test
-    public void testFetchResults() throws SQLException, ClassNotFoundException {
-        ResultSet resultSet = dbUtils.fetchResults("select * from white_label");
-        while(resultSet.next()) {
-            String user = resultSet.getString("user_id");
-            Assert.assertNotNull(user);
-        }
-    }
-
-    @After
-    public void destroy() throws SQLException {
-        dbUtils.close();
+    public void testFetchResults() throws Exception {
+        DBUtils.ResultSetHandler resultSet = DBUtils.getInstance().fetchResults("select * from white_label");
+        int user_idCol = resultSet.columnNames.get("user_id");
+        String user = String.valueOf(resultSet.rowsList.get(0).get(user_idCol));
+        System.out.println("User_id " + user);
+        Assert.assertNotNull(user);
     }
 }
+

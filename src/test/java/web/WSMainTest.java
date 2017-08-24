@@ -3,6 +3,7 @@ package web;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -113,6 +114,24 @@ public class WSMainTest extends AbstractTest{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+        });
+    }
+
+    @Test
+    public void testCounts() throws Exception{
+        String json = target.path("rest").
+                path("logos").
+                path("counts").
+                request().
+                accept(MediaType.APPLICATION_JSON).
+                get(String.class);
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map<String, Integer> counts = mapper.readValue(json, Map.class);
+        counts.keySet().stream().forEach(c -> {
+            int count = counts.get(c);
+            Assert.assertTrue(count >=0);
 
         });
     }

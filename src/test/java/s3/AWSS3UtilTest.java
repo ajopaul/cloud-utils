@@ -2,6 +2,7 @@ package s3;
 
 import common.AbstractTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import util.SystemProperties;
 
@@ -10,6 +11,7 @@ import java.io.IOException;
 /**
  * Created by ajopaul on 23/8/17.
  */
+//@Ignore
 public class AWSS3UtilTest extends AbstractTest {
 
     String keyName = null;

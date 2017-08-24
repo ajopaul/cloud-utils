@@ -17,7 +17,7 @@ public class DBUtilsTest {
 
     @Test
     public void testFetchResults() throws Exception {
-        DBUtils.ResultSetHandler resultSet = DBUtils.getInstance().fetchResults("select * from white_label");
+        DBUtils.ResultSetHandler resultSet = DBUtils.fetchResults("select * from white_label");
         int user_idCol = resultSet.columnNames.get("user_id");
         String user = String.valueOf(resultSet.rowsList.get(0).get(user_idCol));
         System.out.println("User_id " + user);

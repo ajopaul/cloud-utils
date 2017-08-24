@@ -20,43 +20,58 @@ public class DBUtils {
     public static final String HOST = SystemProperties.getPropValue("ssh_host");
     public static final String DB_HOST = SystemProperties.getPropValue("db_host");
 
-    Connection connect;
-    String dbUrl;
-    ResultSet resultSet;
-    Statement statement;
-    Session session;
+    public static Environment ENVIRONMENT = Environment.DEV;
 
-    private DBUtils() throws JSchException, SQLException, ClassNotFoundException {
-        init();
+    enum Environment {DEV, UAT, PROD};
+    private static String dbUrl;
+
+
+    private DBUtils()  {
     }
 
-    private static DBUtils dbUtils;
 
-    public static DBUtils getInstance() throws JSchException, SQLException, ClassNotFoundException {
-        if(null == dbUtils)
-            return new DBUtils();
-        else
-            return dbUtils;
-    }
 
-    private void init() throws SQLException, ClassNotFoundException, JSchException {
+    private static void init(Connection connect ,Session session) throws SQLException, ClassNotFoundException, JSchException {
         dbUrl = SystemProperties.getPropValue("db_connection_url");
-        JSch jsch = new JSch();
-            jsch.addIdentity(SSH_KEY_IDENTITY);
-            session = jsch.getSession(USERNAME, HOST, 22);
-            session.setConfig( "StrictHostKeyChecking", "no" );
-            session.connect();
-            session.setPortForwardingL(3356, DB_HOST, 3306);
-        createConnection();
+        switch (ENVIRONMENT){
+            case DEV:
+                break;
+            case UAT:
+                tunnel(session);
+                break;
+            case PROD:
+                tunnel(session);
+                break;
+        }
+
+        connect = createConnection(connect);
     }
 
-    private void createConnection() throws ClassNotFoundException, SQLException {
+    private static void tunnel(Session session) throws JSchException {
+        JSch jsch = new JSch();
+        jsch.addIdentity(SSH_KEY_IDENTITY);
+        session = jsch.getSession(USERNAME, HOST, 22);
+        session.setConfig( "StrictHostKeyChecking", "no" );
+        session.connect();
+        session.setPortForwardingL(3356, DB_HOST, 3306);
+    }
+
+    private static Connection createConnection(Connection connect) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
         connect = DriverManager
                 .getConnection(dbUrl);
+        return connect;
     }
 
-    public ResultSetHandler fetchResults(String sql) throws SQLException, ClassNotFoundException {
+    public static ResultSetHandler fetchResults(String sql) throws SQLException, ClassNotFoundException, JSchException {
+          Connection connect = null;
+
+          ResultSet resultSet = null;
+          Statement statement = null;
+          Session session = null;
+         init(connect, session);
+        connect = createConnection(connect);
+
         ResultSetHandler resultSetHandler = new ResultSetHandler();
         try {
             statement = connect.createStatement();
@@ -92,12 +107,12 @@ public class DBUtils {
                 resultSetHandler.rowsList.add(rowValues);
             }
         }finally {
-            close();
+            close(resultSet, statement, connect, session);
         }
         return resultSetHandler;
     }
 
-    public void close() throws SQLException {
+    private static void close(ResultSet resultSet, Statement statement, Connection connect, Session session) throws SQLException {
         if(null != resultSet)
             resultSet.close();
         if(null != statement)

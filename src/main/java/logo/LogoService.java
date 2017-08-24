@@ -29,22 +29,37 @@ public class LogoService {
     }
 
     public List<LogoModel> getLogoRows() throws Exception {
-        DBUtils.ResultSetHandler resultSet = DBUtils.getInstance().fetchResults(sqlQuery);
+        DBUtils.ResultSetHandler resultSet = DBUtils.fetchResults(sqlQuery);
 
         List<LogoModel> logos = new ArrayList<>();
         resultSet.rowsList.forEach( resultRow ->{
             LogoModel logoModel = new LogoModel();
-            logoModel.brokerName = String.valueOf(resultRow.get(resultSet.columnNames.get("user")));
-            logoModel.logoKey = String.valueOf(resultRow.get(resultSet.columnNames.get("logo")));
-            logoModel.isLogoActive = String.valueOf(resultRow.get(resultSet.columnNames.get("logo_active"))).equals("Y");
-            logoModel.profileImageKey = String.valueOf(resultRow.get(resultSet.columnNames.get("profile_image")));
-            logoModel.isProfileActive = String.valueOf(resultRow.get(resultSet.columnNames.get("profile_image_active") )).equals("Y");
-            logoModel.modifiedByUser = String.valueOf(resultRow.get(resultSet.columnNames.get("modified_user")));
-            logoModel.modifiedByDate = (Date)resultRow.get(resultSet.columnNames.get("modified_date"));
+            Object user = getRowValue(resultSet.columnNames, resultRow, "user");
+            logoModel.brokerName = null != user  ? String.valueOf(user) : null;
+
+            Object logo = getRowValue(resultSet.columnNames, resultRow, "logo");
+            logoModel.logoKey = null != logo  ? String.valueOf(logo) : null;
+
+            logoModel.isLogoActive = String.valueOf(getRowValue(resultSet.columnNames, resultRow, "logo_active")).equals("Y");
+
+            Object profileImageKey = getRowValue(resultSet.columnNames, resultRow, "profile_image");
+            logoModel.profileImageKey = null != profileImageKey  ? String.valueOf(profileImageKey) : null;
+
+            logoModel.isProfileActive = String.valueOf(getRowValue(resultSet.columnNames, resultRow, "profile_image_active")).equals("Y");
+
+            Object modifiedByUser = getRowValue(resultSet.columnNames, resultRow, "modified_user");
+            logoModel.modifiedByUser = null != modifiedByUser  ? String.valueOf(modifiedByUser) : null;
+
+            logoModel.modifiedByDate = (Date)getRowValue(resultSet.columnNames, resultRow, "modified_date");
+
             logos.add(logoModel);
         });
 
         return logos;
+    }
+
+    public Object getRowValue(Map<String, Integer> colNamesMap, List<Object> resultRow, String colName) {
+        return resultRow.get(colNamesMap.get(colName));
     }
 
     public Map<String, Integer> getLogoCounts() throws Exception {
@@ -61,7 +76,7 @@ public class LogoService {
 
 
     private int getCount(String logoSqlQuery) throws Exception {
-        DBUtils.ResultSetHandler resultSetHandler = DBUtils.getInstance().fetchResults(logoSqlQuery);
+        DBUtils.ResultSetHandler resultSetHandler = DBUtils.fetchResults(logoSqlQuery);
         int count = Integer.parseInt(String.valueOf(resultSetHandler.rowsList.get(0).get(0)));
         return count;
     }

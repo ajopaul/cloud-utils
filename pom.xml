@@ -26,7 +26,7 @@
                 <configuration>
                     <url>http://localhost:8088/manager/text</url>
                     <server>TomcatServer</server>
-                    <path>/cloud</path>
+                    <path>/app</path>
                 </configuration>
             </plugin>
         </plugins>

@@ -20,7 +20,7 @@ public class DBUtils {
     public static final String HOST = SystemProperties.getPropValue("ssh_host");
     public static final String DB_HOST = SystemProperties.getPropValue("db_host");
 
-    public static Environment ENVIRONMENT = Environment.PROD;
+    public static Environment ENVIRONMENT = getENVIRONMENT();
 
     enum Environment {DEV, UAT, PROD};
 
@@ -28,7 +28,22 @@ public class DBUtils {
     private DBUtils()  {
     }
 
-
+    private static Environment getENVIRONMENT(){
+        String env = SystemProperties.getPropValue("environment");
+        Environment environment = Environment.DEV;
+        switch (env){
+            case "dev":
+                environment = ENVIRONMENT.DEV;
+                break;
+            case "uat":
+                environment = Environment.UAT;
+                break;
+            case "prod":
+                environment = ENVIRONMENT.PROD;
+                break;
+        }
+        return environment;
+    }
 
     private static Session createTunnelSession() throws SQLException, ClassNotFoundException, JSchException {
         Session session = null;
@@ -122,8 +137,9 @@ public class DBUtils {
             statement.close();
         if(null != connect)
             connect.close();
-        if(null != session)
+        if(null != session) {
             session.disconnect();
+        }
     }
 
     public static class ResultSetHandler{

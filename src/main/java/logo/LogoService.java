@@ -2,13 +2,10 @@ package logo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jcraft.jsch.JSchException;
 import database.DBUtils;
 import dto.LogoModel;
 import util.SystemProperties;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -16,10 +13,11 @@ import java.util.*;
  */
 public class LogoService {
 
-    String sqlQuery;
+    String logoSql;
+    String countSql;
     public LogoService() throws Exception {
-        
-        sqlQuery = SystemProperties.getPropValue("logo_sql");
+        logoSql = SystemProperties.getPropValue("logo_sql");
+        countSql = SystemProperties.getPropValue("count_sql");
     }
     public String jsonGenerator() throws Exception {
         List<LogoModel> logos = getLogoRows();
@@ -29,7 +27,7 @@ public class LogoService {
     }
 
     public List<LogoModel> getLogoRows() throws Exception {
-        DBUtils.ResultSetHandler resultSet = DBUtils.fetchResults(sqlQuery);
+        DBUtils.ResultSetHandler resultSet = DBUtils.fetchResults(logoSql);
 
         List<LogoModel> logos = new ArrayList<>();
         resultSet.rowsList.forEach( resultRow ->{
@@ -64,7 +62,6 @@ public class LogoService {
 
     public Map<String, Integer> getLogoCounts() throws Exception {
         Map<String, Integer> countsMap = new HashMap<>();
-        String countSql = "select sum(case when logo is not null and logo_active = 'Y' and modified_by is not null and modified_by != 33393 then 1 else 0 end) logo, sum(case when profile_image is not null and profile_image_active = 'Y' and modified_by is not null and modified_by != 33393 then 1 else 0 end) profile from white_label";
         DBUtils.ResultSetHandler resultSetHandler = DBUtils.fetchResults(countSql);
         List<Object> row = resultSetHandler.rowsList.get(0);
         if(row.size() > 1) {

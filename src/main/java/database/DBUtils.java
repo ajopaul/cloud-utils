@@ -33,13 +33,13 @@ public class DBUtils {
         Environment environment = Environment.DEV;
         switch (env){
             case "dev":
-                environment = ENVIRONMENT.DEV;
+                environment = Environment.DEV;
                 break;
             case "uat":
                 environment = Environment.UAT;
                 break;
             case "prod":
-                environment = ENVIRONMENT.PROD;
+                environment = Environment.PROD;
                 break;
         }
         return environment;
